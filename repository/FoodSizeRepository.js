@@ -3,12 +3,15 @@ const prisma = new PrismaClient();
 
 module.exports = {
 
-  createFoodTypeBynameAndReamrk: async (name, remark) => {
+  createFoodSize: async (foodTypeId, name, remark, moneyAdded) => {
     try {
-      const foodType = await prisma.foodType.create({
+      const foodType = await prisma.foodSize.create({
         data: {
+          foodTypeId: parseInt(foodTypeId),
           name: name,
-          remark: remark
+          remark: remark,
+          moneyAdded: parseInt(moneyAdded),
+          status: "use"
         }
       });
 
@@ -18,9 +21,12 @@ module.exports = {
     }
   },
 
-  getFoodTypeList: async () => {
+  getFoodSizeList: async () => {
     try {
-      const dataList = await prisma.foodType.findMany({
+      const dataList = await prisma.foodSize.findMany({
+        include: {
+          FoodType: true
+        },
         where: {
           status: 'use'
         },
@@ -35,12 +41,14 @@ module.exports = {
     }
   },
 
-  updateFoodTypeById: async (id, name, remark) => {
+  updateFoodSizeById: async (id, name, remark, foodTypeId, moneyAdded) => {
     try {
-      const res = await prisma.foodType.update({
+      const res = await prisma.foodSize.update({
         data : {
           name: name,
-          remark: remark
+          remark: remark,
+          foodTypeId: parseInt(foodTypeId),
+          moneyAdded: parseInt(moneyAdded)
         },
         where : {
           id: parseInt(id)
@@ -53,9 +61,9 @@ module.exports = {
     }
   },
 
-  removeFoodTypeById: async (id) => {
+  removeFoodSizeById: async (id) => {
     try {
-      const res = await prisma.foodType.update({
+      const res = await prisma.foodSize.update({
         data : {
           status: "delete"
         },
@@ -69,6 +77,5 @@ module.exports = {
         return ex;
     }
   },
-
 
 };

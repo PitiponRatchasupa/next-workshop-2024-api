@@ -1,14 +1,17 @@
 const { PrismaClient } = require("@prisma/client");
-const FoodTypeRepository = require("../repository/FoodTypeRepository");
+const FoodSizeRepository = require("../repository/FoodSizeRepository");
 const prisma = new PrismaClient();
 module.exports = {
   create: async (req, res) => {
     try {
+      const foodTypeId = req?.body?.foodTypeId;
       const name = req?.body?.name;
       const remark = req.body.remark;
+      const moneyAdded = req?.body?.moneyAdded;
+
 
       if (name) {
-        await FoodTypeRepository.createFoodTypeBynameAndReamrk(name, remark);
+        await FoodSizeRepository.createFoodSize(foodTypeId, name, remark, moneyAdded);
         return res.send({ msg: "create success" });
       } else {
         return res.status(500).send({ error: ex.message });
@@ -20,7 +23,7 @@ module.exports = {
 
   list: async (req, res) => {
     try {
-      const datalist = await FoodTypeRepository.getFoodTypeList();
+      const datalist = await FoodSizeRepository.getFoodSizeList();
       return res.send({ dataList: datalist });
     } catch (ex) {
       return res.status(500).send({ error: ex.message });
@@ -29,7 +32,7 @@ module.exports = {
 
   update: async (req, res) => {
     try {
-      await FoodTypeRepository.updateFoodTypeById(req.params.id, req.body.name, req.body.remark);
+      await FoodSizeRepository.updateFoodSizeById(req.params.id, req.body.name, req.body.remark, req.body.foodTypeId, req.body.moneyAdded);
       return res.send({ msg: "update success" });
     } catch (ex) {
       return res.status(500).send({ error: ex.message });
@@ -38,7 +41,7 @@ module.exports = {
 
   remove: async (req, res) => {
     try {
-      await FoodTypeRepository.removeFoodTypeById(req.params.id);
+      await FoodSizeRepository.updateFoodSizeById(req.params.id);
       return res.send({ msg: "remove success" });
     } catch (ex) {
       return res.status(500).send({ error: ex.message });
